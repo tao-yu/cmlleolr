@@ -111,7 +111,7 @@ function drawCube(cubeArray) {
 
 function doAlg(algorithm){
     if(disappearOnNextMove){
-        if(!/[xyz]/.test(algorithm)){
+        if(!/[xyzU]/.test(algorithm)){
             greyLSE();
             disappearOnNextMove = false;
         }
@@ -130,6 +130,10 @@ function LSEscramble(){
 
         doAlg(moves[rand]);
 
+    }
+    if(cube.cubestate[31]!=cube.cubestate[27]&&cube.cubestate[4]!=cube.cubestate[27]){
+        //If the centers are misoriented
+        doAlg("M");
     }
 }
 
@@ -315,6 +319,7 @@ listener.simple_combo("m", function() {	doAlg("r'");});
 listener.simple_combo("v", function() {	doAlg("l");});
 listener.simple_combo("r", function() {	doAlg("l'");});
 listener.simple_combo("`", function() {	doAlg("M");});
+listener.simple_combo("'", function() {	doAlg("M");});
 listener.simple_combo("[", function() {	doAlg("M'");});
 listener.simple_combo("t", function() {	doAlg("x");});
 listener.simple_combo("n", function() {	doAlg("x'");});
