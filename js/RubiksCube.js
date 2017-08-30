@@ -168,6 +168,7 @@ function greyLSE(){
         cube.greyStickers([46, 49 ,52]);
         cube.greyStickers([37,10]);
     }
+
 }    
 
 function testAlg(algorithm, auf){
@@ -207,13 +208,14 @@ function testAlg(algorithm, auf){
 
 
     doAlg(inverse);
-    //greyLSE();
+	cube.unGrey();
     drawCube(cube.cubestate)
     console.log(algorithm);
-    currentAlgorithm = algorithm;
+    currentAlgorithm = alg.cube.invert(fullscramble);
     //updateVisualCube(algorithm)
     
     disappearOnNextMove = true;
+
 
 }
 function fixAlgorithm(algorithm){
@@ -243,6 +245,7 @@ function reTestAlg(){
             break;
     }
     doAlg(alg.cube.invert(currentAlgorithm));
+	disappearOnNextMove = true;
     drawCube(cube.cubestate)
 
 }
@@ -302,7 +305,12 @@ function createAlgList(){
 
     }
     if(algList.length < 1){ //if nothing checked, just do T perm
-        algList = ["R U R' U' R' F R2 U' R' U' R U R' F'"];
+
+        for (var subset in window.zbll_full){
+            algList = algList.concat(zbll_full[subset]);
+        }
+        return algList;
+
     }
     
     return algList;
