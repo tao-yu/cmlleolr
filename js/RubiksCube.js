@@ -6,6 +6,7 @@ var ctx = canvas.getContext("2d");
 var stickerSize = 50;
 var disappearOnNextMove = false;
 
+Cube.initSolver();
 function fillSticker(x, y, colour) {
     ctx.fillStyle = colour;
     ctx.fillRect(stickerSize * x, stickerSize * y, stickerSize, stickerSize);
@@ -122,6 +123,7 @@ function doAlg(algorithm){
 drawCube(cube.cubestate);
 
 function LSEscramble(){
+	var scramble = "";
     var i;
     for(i = 0; i<100;i++){
         rand = Math.floor((Math.random() * 6));
@@ -129,12 +131,16 @@ function LSEscramble(){
         var moves = ["M", "M'", "M2", "U", "U'", "U2"];
 
         doAlg(moves[rand]);
+		scramble += moves[rand];
 
     }
     if(cube.cubestate[31]!=cube.cubestate[27]&&cube.cubestate[4]!=cube.cubestate[27]){
         //If the centers are misoriented
         doAlg("M");
+		scramble += "M";
     }
+	return scramble;
+
 }
 
 function getRandAuf(){
@@ -143,16 +149,15 @@ function getRandAuf(){
     return aufs[rand] 
 }
 //This will return an algorithm that has the same effect as algorithm, but with different moves. 
-/*
+
 function obfusticate(algorithm){
 
-    Cube.initSolver();
     var rc = new RubiksCube();
     rc.doAlgorithm(algorithm);
     orient = alg.cube.invert(rc.wcaOrient());
     return (alg.cube.invert(rc.solution()) + orient).replace(/2'/g, "2");
 }
-*/     
+     
 function greyLSE(){
     if(cube.hasGreyStickers()){
         cube.unGrey();
@@ -189,17 +194,19 @@ function testAlg(algorithm, auf){
 
     }
 
-    var inverse = alg.cube.invert(algorithm);	
+    var inverse = alg.cube.simplify(alg.cube.invert(algorithm));	
+    var lse = LSEscramble();
+	var fullscramble = obfusticate(lse+inverse);
+
     var scrP = document.getElementById("scramble");
     if (document.getElementById("showScramble").checked){
-        scrP.innerHTML = alg.cube.simplify(inverse);
+        scrP.innerHTML = fullscramble;
     } else{
         scrP.innerHTML = "";
     }
 
 
     doAlg(inverse);
-    LSEscramble();
     //greyLSE();
     drawCube(cube.cubestate)
     console.log(algorithm);
